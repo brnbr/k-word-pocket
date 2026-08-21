@@ -1,4 +1,9 @@
 package com.example.kwordpocket.deck.repository;
 
-public interface CardRepository {
+import com.example.kwordpocket.deck.entity.Card;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface CardRepository extends JpaRepository<Card, Long> {
 }
