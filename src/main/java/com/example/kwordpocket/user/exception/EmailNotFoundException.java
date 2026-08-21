@@ -1,8 +1,9 @@
 package com.example.kwordpocket.user.exception;
 
+import com.example.kwordpocket.global.exception.CustomException;
 import org.springframework.http.HttpStatus;
 
-public class EmailNotFoundException extends ServiceException {
+public class EmailNotFoundException extends CustomException {
     public EmailNotFoundException() {
         super(HttpStatus.BAD_REQUEST, "존재하지 않는 이메일입니다.");
     }
