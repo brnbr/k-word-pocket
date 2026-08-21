@@ -118,7 +118,7 @@
         }
         .card-text { font-size: 18px; font-weight: bold; }
 
-        /* 인쇄(Print) 전용 레이아웃 (가로 2열 배치 등) */
+        /* 인쇄(Print) 전용 레이아웃 */
         @media print {
             body { background: white; padding: 0; }
             .no-print { display: none !important; }
@@ -135,7 +135,7 @@
                 background: white !important;
                 color: black !important;
             }
-            .card-back { display: none; } /* 인쇄 시 요구사항에 맞게 접이식/단면식 구성 가능 */
+            .card-back { display: none; }
         }
     </style>
 </head>
@@ -177,13 +177,13 @@
 <script>
     let currentDeckId = null;
 
-    // 1. 단어장 생성 API 호출 (POST /api/decks)
+    // 1. 단어장 생성 API 호출 (POST /decks)
     async function createDeck() {
         const name = document.getElementById('deckName').value.trim();
         if (!name) return alert('단어장 이름을 입력해주세요.');
 
         try {
-            const res = await fetch('http://localhost:8080/api/decks', {
+            const res = await fetch('/decks', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name })
@@ -201,14 +201,14 @@
         }
     }
 
-    // 2. 카드 생성 API 호출 (POST /api/cards)
+    // 2. 카드 생성 API 호출 (POST /cards)
     async function createCard() {
         const front = document.getElementById('cardFront').value.trim();
         const back = document.getElementById('cardBack').value.trim();
         if (!front || !back) return alert('앞면과 뒷면 내용을 모두 입력해주세요.');
 
         try {
-            const res = await fetch('http://localhost:8080/api/cards', {
+            const res = await fetch('/cards', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
