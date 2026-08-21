@@ -1,7 +1,10 @@
 package com.example.kwordpocket.user.enums;
 
+import com.example.kwordpocket.user.exception.RoleNotMatchException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+
+import java.util.Arrays;
 
 @Getter
 @RequiredArgsConstructor
