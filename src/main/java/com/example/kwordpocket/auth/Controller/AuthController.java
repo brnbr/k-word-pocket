@@ -1,4 +1,4 @@
-package com.example.kwordpocket.auth.Controller;
+package com.example.kwordpocket.auth.controller;
 
 import com.example.kwordpocket.auth.dto.SigninRequest;
 import com.example.kwordpocket.auth.dto.SignupRequest;
