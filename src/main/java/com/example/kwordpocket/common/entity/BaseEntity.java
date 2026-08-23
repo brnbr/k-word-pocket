@@ -1,4 +1,4 @@
-package com.example.kwordpocket.global.entity;
+package com.example.kwordpocket.common.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
