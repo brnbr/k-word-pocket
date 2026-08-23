@@ -1,4 +1,4 @@
-package com.example.kwordpocket.global.exception;
+package com.example.kwordpocket.common.exception;
 
 public record ErrorResponse(
         String code,
