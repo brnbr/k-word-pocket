@@ -12,6 +12,6 @@ public class SignupRequest {
     private String email;
     @NotBlank
     private String password;
-    @NotBlank
+    //role 입력 시 admin, 공란은 user
     private String role;
 }
