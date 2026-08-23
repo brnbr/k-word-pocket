@@ -1,4 +1,4 @@
-package com.example.kwordpocket.global.config;
+package com.example.kwordpocket.common.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
