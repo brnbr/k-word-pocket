@@ -5,10 +5,10 @@ import com.example.kwordpocket.auth.dto.SignupRequest;
 import com.example.kwordpocket.common.config.JwtUtil;
 import com.example.kwordpocket.user.entity.User;
 import com.example.kwordpocket.user.enums.Role;
+import com.example.kwordpocket.user.exception.DuplicateEmailException;
 import com.example.kwordpocket.user.exception.EmailNotFoundException;
 import com.example.kwordpocket.user.exception.PasswordNotMatchException;
 import com.example.kwordpocket.user.repository.UserRepository;
-import com.sun.jdi.request.DuplicateRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ public class AuthService {
     public void signup(SignupRequest request) {
 
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new DuplicateRequestException();
+            throw new DuplicateEmailException();
         }
 
         String encodePassword = passwordEncoder.encode(request.getPassword());
