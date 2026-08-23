@@ -2,13 +2,13 @@ package com.example.kwordpocket.auth.service;
 
 import com.example.kwordpocket.auth.dto.SigninRequest;
 import com.example.kwordpocket.auth.dto.SignupRequest;
-import com.example.kwordpocket.global.jwt.JwtUtil;
+import com.example.kwordpocket.common.config.JwtUtil;
 import com.example.kwordpocket.user.entity.User;
 import com.example.kwordpocket.user.enums.Role;
 import com.example.kwordpocket.user.exception.EmailNotFoundException;
 import com.example.kwordpocket.user.exception.PasswordNotMatchException;
 import com.example.kwordpocket.user.repository.UserRepository;
-import jakarta.validation.Valid;
+import com.sun.jdi.request.DuplicateRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,30 +24,30 @@ public class AuthService {
 
     @Transactional
     public void signup(SignupRequest request) {
-        String password = request.getPassword();
-        String encodePassword = passwordEncoder.encode(password);
+
+        if (userRepository.existByEmail(request.getEmail())) {
+            throw new DuplicateRequestException();
+        }
+
+        String encodePassword = passwordEncoder.encode(request.getPassword());
+        Role role = (request.getRole() != null) ? Role.of(request.getRole()) : Role.ROLE_USER;
 
         User user = new User(
                 request.getEmail(),
                 encodePassword,
-                Role.of(request.getRole())
+                role
         );
 
         userRepository.save(user);
-
     }
 
-    @Transactional
-    public String signin(@Valid SigninRequest request) {
+    @Transactional(readOnly = true)
+    public String signin(SigninRequest request) {
         User user = userRepository.findByEmail(request.getEmail()).orElseThrow(
                 () -> new EmailNotFoundException()
         );
 
-        String rawPassword = request.getPassword();
-        String encodedPassword = user.getPassword();
-        boolean matches = passwordEncoder.matches(rawPassword, encodedPassword);
-
-        if (!matches) {
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new PasswordNotMatchException();
         }
 
