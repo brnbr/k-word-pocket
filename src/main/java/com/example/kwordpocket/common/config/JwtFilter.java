@@ -1,4 +1,4 @@
-package com.example.kwordpocket.global.jwt;
+package com.example.kwordpocket.common.config;
 
 import com.example.kwordpocket.auth.dto.AuthUser;
 import com.example.kwordpocket.user.enums.Role;

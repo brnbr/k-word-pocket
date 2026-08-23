@@ -1,6 +1,5 @@
 package com.example.kwordpocket.global.config;
 
-import com.example.kwordpocket.global.jwt.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

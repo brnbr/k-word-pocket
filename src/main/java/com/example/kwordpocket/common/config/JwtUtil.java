@@ -1,4 +1,4 @@
-package com.example.kwordpocket.global.jwt;
+package com.example.kwordpocket.global.config;
 
 import com.example.kwordpocket.user.enums.Role;
 import io.jsonwebtoken.Claims;
