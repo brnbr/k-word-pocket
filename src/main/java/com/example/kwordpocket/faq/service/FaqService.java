@@ -2,6 +2,7 @@ package com.example.kwordpocket.faq.service;
 
 import com.example.kwordpocket.faq.dto.*;
 import com.example.kwordpocket.faq.entity.Faq;
+import com.example.kwordpocket.faq.exception.FaqNotFoundException;
 import com.example.kwordpocket.faq.repository.FaqRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -40,7 +41,7 @@ public class FaqService {
     @Transactional(readOnly = true)
     public FaqGetResponse getOneFaq(Long faqId) {
         Faq faq = faqRepository.findById(faqId).orElseThrow(
-                () -> new FaqNotFoundException("존재하지 않는 Faq 입니다.")
+                () -> new FaqNotFoundException()
         );
         return new FaqGetResponse(
                 faq.getId(),
@@ -52,7 +53,7 @@ public class FaqService {
     @Transactional
     public FaqUpdateResponse updateFaq(Long faqId, FaqUpdateRequest request) {
         Faq faq = faqRepository.findById(faqId).orElseThrow(
-                () -> new FaqNotFoundException("존재하지 않는 Faq 입니다.")
+                () -> new FaqNotFoundException()
         );
         faq.update(request.getQuestion(), request.getAnswer());
         return new FaqUpdateResponse(
@@ -66,7 +67,7 @@ public class FaqService {
     public void deleteFaq(Long faqId) {
         boolean existence = faqRepository.existsById(faqId);
         if (!existence){
-            throw new FaqNotFoundException("존재하지 않는 Faq 입니다.");
+            throw new FaqNotFoundException();
         }
         faqRepository.deleteById(faqId);
     }
