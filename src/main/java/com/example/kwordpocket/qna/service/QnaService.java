@@ -9,11 +9,13 @@ import com.example.kwordpocket.qna.dto.QuestionResponse;
 import com.example.kwordpocket.qna.dto.QuestionUpdateRequest;
 import com.example.kwordpocket.qna.entity.Answer;
 import com.example.kwordpocket.qna.entity.Question;
+import com.example.kwordpocket.qna.exception.AnswerNotFoundException;
+import com.example.kwordpocket.qna.exception.QuestionNotFoundException;
 import com.example.kwordpocket.qna.repository.AnswerRepository;
 import com.example.kwordpocket.qna.repository.QuestionRepository;
 import com.example.kwordpocket.user.entity.User;
+import com.example.kwordpocket.user.exception.UserNotFoundException;
 import com.example.kwordpocket.user.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -100,16 +102,16 @@ public class QnaService {
 
     private Question findQuestionById(Long questionId) {
         return questionRepository.findById(questionId)
-                .orElseThrow(() -> new EntityNotFoundException("질문을 찾을 수 없습니다."));
+                .orElseThrow(() -> new QuestionNotFoundException());
     }
 
     private Answer findAnswerInQuestion(Long questionId, Long answerId) {
         return answerRepository.findByIdAndQuestionId(answerId, questionId)
-                .orElseThrow(() -> new EntityNotFoundException("답변을 찾을 수 없습니다."));
+                .orElseThrow(() -> new AnswerNotFoundException());
     }
 
     private User findUserById(Long userId) {
         return userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("유저를 찾을 수 없습니다."));
+                .orElseThrow(() -> new UserNotFoundException());
     }
 }
