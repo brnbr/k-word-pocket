@@ -1,5 +1,6 @@
 package com.example.kwordpocket.qna.service;
 
+import com.example.kwordpocket.auth.dto.AuthUser;
 import com.example.kwordpocket.qna.dto.AnswerCreateRequest;
 import com.example.kwordpocket.qna.dto.AnswerResponse;
 import com.example.kwordpocket.qna.dto.AnswerUpdateRequest;
@@ -10,10 +11,12 @@ import com.example.kwordpocket.qna.dto.QuestionUpdateRequest;
 import com.example.kwordpocket.qna.entity.Answer;
 import com.example.kwordpocket.qna.entity.Question;
 import com.example.kwordpocket.qna.exception.AnswerNotFoundException;
+import com.example.kwordpocket.qna.exception.QnaAccessDeniedException;
 import com.example.kwordpocket.qna.exception.QuestionNotFoundException;
 import com.example.kwordpocket.qna.repository.AnswerRepository;
 import com.example.kwordpocket.qna.repository.QuestionRepository;
 import com.example.kwordpocket.user.entity.User;
+import com.example.kwordpocket.user.enums.Role;
 import com.example.kwordpocket.user.exception.UserNotFoundException;
 import com.example.kwordpocket.user.repository.UserRepository;
 import java.util.List;
@@ -42,8 +45,8 @@ public class QnaService {
     }
 
     @Transactional
-    public QuestionResponse createQuestion(QuestionCreateRequest request, Long loginUserId) {
-        User user = findUserById(loginUserId);
+    public QuestionResponse createQuestion(QuestionCreateRequest request, AuthUser authUser) {
+        User user = findUserById(authUser.getId());
         Question question = Question.builder()
                 .user(user)
                 .title(request.getTitle())
@@ -53,16 +56,19 @@ public class QnaService {
     }
 
     @Transactional
-    public QuestionResponse updateQuestion(Long questionId, QuestionUpdateRequest request) {
+    public QuestionResponse updateQuestion(Long questionId, QuestionUpdateRequest request, AuthUser authUser) {
         Question question = findQuestionById(questionId);
+        validateAuthor(question.getUser().getId(), authUser);
         question.update(request.getTitle(), request.getContent());
         questionRepository.flush();
         return QuestionResponse.from(question);
     }
 
     @Transactional
-    public void deleteQuestion(Long questionId) {
-        questionRepository.delete(findQuestionById(questionId));
+    public void deleteQuestion(Long questionId, AuthUser authUser) {
+        Question question = findQuestionById(questionId);
+        validateAuthorOrAdmin(question.getUser().getId(), authUser);
+        questionRepository.delete(question);
     }
 
     public List<AnswerResponse> getAnswers(Long questionId) {
@@ -76,9 +82,9 @@ public class QnaService {
     }
 
     @Transactional
-    public AnswerResponse createAnswer(Long questionId, AnswerCreateRequest request, Long loginUserId) {
+    public AnswerResponse createAnswer(Long questionId, AnswerCreateRequest request, AuthUser authUser) {
         Question question = findQuestionById(questionId);
-        User user = findUserById(loginUserId);
+        User user = findUserById(authUser.getId());
         Answer answer = Answer.builder()
                 .question(question)
                 .user(user)
@@ -88,16 +94,31 @@ public class QnaService {
     }
 
     @Transactional
-    public AnswerResponse updateAnswer(Long questionId, Long answerId, AnswerUpdateRequest request) {
+    public AnswerResponse updateAnswer(Long questionId, Long answerId, AnswerUpdateRequest request, AuthUser authUser) {
         Answer answer = findAnswerInQuestion(questionId, answerId);
+        validateAuthor(answer.getUser().getId(), authUser);
         answer.update(request.getContent());
         answerRepository.flush();
         return AnswerResponse.from(answer);
     }
 
     @Transactional
-    public void deleteAnswer(Long questionId, Long answerId) {
-        answerRepository.delete(findAnswerInQuestion(questionId, answerId));
+    public void deleteAnswer(Long questionId, Long answerId, AuthUser authUser) {
+        Answer answer = findAnswerInQuestion(questionId, answerId);
+        validateAuthorOrAdmin(answer.getUser().getId(), authUser);
+        answerRepository.delete(answer);
+    }
+
+    private void validateAuthor(Long authorId, AuthUser authUser) {
+        if (!authorId.equals(authUser.getId())) {
+            throw new QnaAccessDeniedException();
+        }
+    }
+
+    private void validateAuthorOrAdmin(Long authorId, AuthUser authUser) {
+        if (!authorId.equals(authUser.getId()) && authUser.getRole() != Role.ROLE_ADMIN) {
+            throw new QnaAccessDeniedException();
+        }
     }
 
     private Question findQuestionById(Long questionId) {

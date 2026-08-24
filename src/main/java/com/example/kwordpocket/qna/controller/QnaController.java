@@ -52,7 +52,7 @@ public class QnaController {
             @AuthenticationPrincipal AuthUser authUser,
             @Valid @RequestBody QuestionCreateRequest request
     ) {
-        QuestionResponse response = qnaService.createQuestion(request, authUser.getId());
+        QuestionResponse response = qnaService.createQuestion(request, authUser);
         return ResponseEntity
                 .created(URI.create("/questions/" + response.getId()))
                 .body(response);
@@ -60,15 +60,19 @@ public class QnaController {
 
     @PutMapping("/{questionId}")
     public ResponseEntity<QuestionResponse> updateQuestion(
+            @AuthenticationPrincipal AuthUser authUser,
             @PathVariable Long questionId,
             @Valid @RequestBody QuestionUpdateRequest request
     ) {
-        return ResponseEntity.ok(qnaService.updateQuestion(questionId, request));
+        return ResponseEntity.ok(qnaService.updateQuestion(questionId, request, authUser));
     }
 
     @DeleteMapping("/{questionId}")
-    public ResponseEntity<Void> deleteQuestion(@PathVariable Long questionId) {
-        qnaService.deleteQuestion(questionId);
+    public ResponseEntity<Void> deleteQuestion(
+            @AuthenticationPrincipal AuthUser authUser,
+            @PathVariable Long questionId
+    ) {
+        qnaService.deleteQuestion(questionId, authUser);
         return ResponseEntity.noContent().build();
     }
 
@@ -91,7 +95,7 @@ public class QnaController {
             @PathVariable Long questionId,
             @Valid @RequestBody AnswerCreateRequest request
     ) {
-        AnswerResponse response = qnaService.createAnswer(questionId, request, authUser.getId());
+        AnswerResponse response = qnaService.createAnswer(questionId, request, authUser);
         return ResponseEntity
                 .created(URI.create("/questions/" + questionId + "/answers/" + response.getId()))
                 .body(response);
@@ -99,19 +103,21 @@ public class QnaController {
 
     @PutMapping("/{questionId}/answers/{answerId}")
     public ResponseEntity<AnswerResponse> updateAnswer(
+            @AuthenticationPrincipal AuthUser authUser,
             @PathVariable Long questionId,
             @PathVariable Long answerId,
             @Valid @RequestBody AnswerUpdateRequest request
     ) {
-        return ResponseEntity.ok(qnaService.updateAnswer(questionId, answerId, request));
+        return ResponseEntity.ok(qnaService.updateAnswer(questionId, answerId, request, authUser));
     }
 
     @DeleteMapping("/{questionId}/answers/{answerId}")
     public ResponseEntity<Void> deleteAnswer(
+            @AuthenticationPrincipal AuthUser authUser,
             @PathVariable Long questionId,
             @PathVariable Long answerId
     ) {
-        qnaService.deleteAnswer(questionId, answerId);
+        qnaService.deleteAnswer(questionId, answerId, authUser);
         return ResponseEntity.noContent().build();
     }
 }
