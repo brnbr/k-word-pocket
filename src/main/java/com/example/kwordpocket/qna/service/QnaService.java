@@ -42,8 +42,8 @@ public class QnaService {
     }
 
     @Transactional
-    public QuestionResponse createQuestion(QuestionCreateRequest request) {
-        User user = findUserById(request.getUserId());
+    public QuestionResponse createQuestion(QuestionCreateRequest request, Long loginUserId) {
+        User user = findUserById(loginUserId);
         Question question = Question.builder()
                 .user(user)
                 .title(request.getTitle())
@@ -76,9 +76,9 @@ public class QnaService {
     }
 
     @Transactional
-    public AnswerResponse createAnswer(Long questionId, AnswerCreateRequest request) {
+    public AnswerResponse createAnswer(Long questionId, AnswerCreateRequest request, Long loginUserId) {
         Question question = findQuestionById(questionId);
-        User user = findUserById(request.getUserId());
+        User user = findUserById(loginUserId);
         Answer answer = Answer.builder()
                 .question(question)
                 .user(user)

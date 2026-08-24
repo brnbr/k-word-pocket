@@ -1,5 +1,6 @@
 package com.example.kwordpocket.qna.controller;
 
+import com.example.kwordpocket.auth.dto.AuthUser;
 import com.example.kwordpocket.qna.dto.AnswerCreateRequest;
 import com.example.kwordpocket.qna.dto.AnswerResponse;
 import com.example.kwordpocket.qna.dto.AnswerUpdateRequest;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedModel;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,8 +48,11 @@ public class QnaController {
     }
 
     @PostMapping
-    public ResponseEntity<QuestionResponse> createQuestion(@Valid @RequestBody QuestionCreateRequest request) {
-        QuestionResponse response = qnaService.createQuestion(request);
+    public ResponseEntity<QuestionResponse> createQuestion(
+            @AuthenticationPrincipal AuthUser authUser,
+            @Valid @RequestBody QuestionCreateRequest request
+    ) {
+        QuestionResponse response = qnaService.createQuestion(request, authUser.getId());
         return ResponseEntity
                 .created(URI.create("/questions/" + response.getId()))
                 .body(response);
@@ -82,10 +87,11 @@ public class QnaController {
 
     @PostMapping("/{questionId}/answers")
     public ResponseEntity<AnswerResponse> createAnswer(
+            @AuthenticationPrincipal AuthUser authUser,
             @PathVariable Long questionId,
             @Valid @RequestBody AnswerCreateRequest request
     ) {
-        AnswerResponse response = qnaService.createAnswer(questionId, request);
+        AnswerResponse response = qnaService.createAnswer(questionId, request, authUser.getId());
         return ResponseEntity
                 .created(URI.create("/questions/" + questionId + "/answers/" + response.getId()))
                 .body(response);
