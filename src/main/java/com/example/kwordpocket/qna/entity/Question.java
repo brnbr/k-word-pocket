@@ -1,6 +1,6 @@
 package com.example.kwordpocket.qna.entity;
 
-import com.example.kwordpocket.global.common.BaseEntity;
+import com.example.kwordpocket.common.entity.BaseEntity;
 import com.example.kwordpocket.user.entity.User;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
