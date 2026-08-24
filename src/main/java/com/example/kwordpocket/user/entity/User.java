@@ -1,6 +1,8 @@
 package com.example.kwordpocket.user.entity;
 
+import com.example.kwordpocket.auth.dto.AuthUser;
 import com.example.kwordpocket.global.common.BaseEntity;
+import com.example.kwordpocket.user.enums.Role;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
