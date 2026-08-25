@@ -8,10 +8,12 @@ import com.example.kwordpocket.qna.dto.QuestionCreateRequest;
 import com.example.kwordpocket.qna.dto.QuestionDetailResponse;
 import com.example.kwordpocket.qna.dto.QuestionResponse;
 import com.example.kwordpocket.qna.dto.QuestionUpdateRequest;
+import com.example.kwordpocket.qna.exception.InvalidSortPropertyException;
 import com.example.kwordpocket.qna.service.QnaService;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -33,12 +35,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class QnaController {
 
+    private static final Set<String> ALLOWED_SORT_PROPERTIES = Set.of("id", "title", "createdAt", "updatedAt");
+
     private final QnaService qnaService;
 
     @GetMapping
     public ResponseEntity<PagedModel<QuestionResponse>> getQuestions(
             @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
+        validateSortProperties(pageable);
         return ResponseEntity.ok(new PagedModel<>(qnaService.getQuestions(pageable)));
     }
 
@@ -119,5 +124,13 @@ public class QnaController {
     ) {
         qnaService.deleteAnswer(questionId, answerId, authUser);
         return ResponseEntity.noContent().build();
+    }
+
+    private void validateSortProperties(Pageable pageable) {
+        for (Sort.Order order : pageable.getSort()) {
+            if (!ALLOWED_SORT_PROPERTIES.contains(order.getProperty())) {
+                throw new InvalidSortPropertyException();
+            }
+        }
     }
 }
