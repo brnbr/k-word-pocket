@@ -66,7 +66,13 @@ public class UserService {
     @Transactional
     public void deleteMe(AuthUser authUser, UserDeleteRequest request) {
         User user = userRepository.findById(authUser.getId()).orElseThrow(
-                () -> new UserNotFoundException()
+                UserNotFoundException::new
         );
+
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new PasswordNotMatchException();
+        }
+
+        userRepository.delete(user);
     }
 }
