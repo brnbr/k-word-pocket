@@ -17,4 +17,10 @@ public class CardRequest {
 
     @NotBlank(message = "뜻(뒷면)을 입력해주세요.")
     private String back;
+
+    public CardRequest(Long deckId, String front, String back) {
+        this.deckId = deckId;
+        this.front = front;
+        this.back = back;
+    }
 }

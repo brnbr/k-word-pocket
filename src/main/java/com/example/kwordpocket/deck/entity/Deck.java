@@ -21,12 +21,13 @@ public class Deck extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "user_id")
-//    private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Builder
-    public Deck(String name) {
+    public Deck(String name, User user) {
         this.name = name;
+        this.user = user;
     }
 }
