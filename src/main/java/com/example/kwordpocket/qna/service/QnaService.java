@@ -68,6 +68,7 @@ public class QnaService {
     public void deleteQuestion(Long questionId, AuthUser authUser) {
         Question question = findQuestionById(questionId);
         validateAuthorOrAdmin(question.getUser().getId(), authUser);
+        answerRepository.deleteAllByQuestionId(questionId);
         questionRepository.delete(question);
     }
 

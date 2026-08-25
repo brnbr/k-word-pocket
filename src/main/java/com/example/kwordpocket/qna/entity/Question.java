@@ -2,7 +2,6 @@ package com.example.kwordpocket.qna.entity;
 
 import com.example.kwordpocket.common.entity.BaseEntity;
 import com.example.kwordpocket.user.entity.User;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -41,7 +40,7 @@ public class Question extends BaseEntity {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
-    @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "question")
     @OrderBy("id ASC")
     private List<Answer> answers = new ArrayList<>();
 
