@@ -1,6 +1,6 @@
 package com.example.kwordpocket.notice.entity;
 
-import com.example.kwordpocket.global.common.BaseEntity;
+import com.example.kwordpocket.common.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
