@@ -12,4 +12,4 @@ public class UserUpdateRequest {
 
     @NotBlank(message = "새 비밀번호는 필수입니다.")
     private String newPassword;
-}햐
+}
