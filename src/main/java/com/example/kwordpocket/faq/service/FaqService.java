@@ -65,7 +65,7 @@ public class FaqService {
     @Transactional
     public void deleteFaq(Long faqId) {
         boolean existence = faqRepository.existsById(faqId);
-        if (!existence){
+        if (!existence) {
             throw new FaqNotFoundException("존재하지 않는 Faq 입니다.");
         }
         faqRepository.deleteById(faqId);

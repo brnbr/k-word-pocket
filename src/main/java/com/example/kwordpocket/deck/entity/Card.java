@@ -1,6 +1,6 @@
 package com.example.kwordpocket.deck.entity;
 
-import com.example.kwordpocket.global.common.BaseEntity;
+import com.example.kwordpocket.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -34,5 +34,9 @@ public class Card extends BaseEntity {
         this.deck = deck;
     }
 
+    public void update(String front, String back) {
+        this.front = front;
+        this.back = back;
+    }
 
 }
