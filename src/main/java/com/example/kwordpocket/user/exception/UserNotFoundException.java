@@ -1,6 +1,6 @@
 package com.example.kwordpocket.user.exception;
 
-import com.example.kwordpocket.global.exception.CustomException;
+import com.example.kwordpocket.common.exception.CustomException;
 import org.springframework.http.HttpStatus;
 
 public class UserNotFoundException extends CustomException {
