@@ -3,6 +3,7 @@ package com.example.kwordpocket.faq.controller;
 import com.example.kwordpocket.faq.dto.*;
 import com.example.kwordpocket.faq.service.FaqService;
 import jakarta.validation.Valid;
+import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,14 +17,17 @@ public class FaqAdminController {
     private final FaqService faqService;
 
     @PostMapping
-    public ResponseEntity<FaqCreateResponse> createFaq(
+    public ResponseEntity<FaqResponse> createFaq(
             @Valid @RequestBody FaqCreateRequest request
     ) {
-        return ResponseEntity.ok(faqService.createFaq(request));
+        FaqResponse response = faqService.createFaq(request);
+        return ResponseEntity
+                .created(URI.create("/faqs/" + response.getId()))
+                .body(response);
     }
 
     @PutMapping("/{faqId}")
-    public ResponseEntity<FaqUpdateResponse> updateFaq(
+    public ResponseEntity<FaqResponse> updateFaq(
             @PathVariable Long faqId,
             @Valid @RequestBody FaqUpdateRequest request
     ){
@@ -31,7 +35,8 @@ public class FaqAdminController {
     }
 
     @DeleteMapping("/{faqId}")
-    public void deleteFaq(@PathVariable Long faqId) {
+    public ResponseEntity<Void> deleteFaq(@PathVariable Long faqId) {
         faqService.deleteFaq(faqId);
+        return ResponseEntity.noContent().build();
     }
 }
